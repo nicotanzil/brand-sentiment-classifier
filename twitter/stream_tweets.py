@@ -5,12 +5,15 @@ from tweepy import Stream
 from tweepy import API
 from tweepy import Cursor
 
-import twitter_credentials
-
 import numpy as np
 import pandas as pd
 
-import re
+from twitter import twitter_credentials as tc
+from twitter.model import tweet as t
+
+import preprocessor as p
+
+from services.encoder import DateTimeEncoder
 
 
 # TWITTER CLIENT
@@ -47,8 +50,8 @@ class TwitterClient:
 class TwitterAuthenticator:
 
     def authenticate_twitter_app(self):
-        auth = OAuthHandler(twitter_credentials.CONSUMER_KEY, twitter_credentials.CONSUMER_SECRET)
-        auth.set_access_token(twitter_credentials.ACCESS_TOKEN, twitter_credentials.ACCESS_TOKEN_SECRET)
+        auth = OAuthHandler(tc.CONSUMER_KEY, tc.CONSUMER_SECRET)
+        auth.set_access_token(tc.ACCESS_TOKEN, tc.ACCESS_TOKEN_SECRET)
         return auth
 
 
@@ -95,26 +98,6 @@ class TwitterListener(StreamListener):
             return False
         print(status_code)
 
-
-class TweetAnalyzer:
-    """
-    Functionality for analyzing and categorizing contents from tweets
-    """
-
-    def tweets_to_data_frame(self, tweets):
-        df = pd.DataFrame(data=tweets)
-
-        df['id'] = np.array([tweet.id for tweet in tweets])
-        df['text'] = np.array([tweet.text for tweet in tweets])
-        df['screen_name'] = np.array([tweet.author.screen_name for tweet in tweets])
-        df['created_at'] = np.array([tweet.created_at for tweet in tweets])
-        df['source'] = np.array([tweet.source for tweet in tweets])
-        df['favorite'] = np.array([tweet.favorite_count for tweet in tweets])
-        df['retweet'] = np.array([tweet.retweet_count for tweet in tweets])
-
-        return df
-
-
 class TweetDataFetcher:
     """
     Functionality for fetching tweets data for various category, such as:
@@ -139,67 +122,28 @@ class TweetDataFetcher:
         pass
 
 
-class TweetPreprocessing:
-
+class Twitter:
     def __init__(self):
-        pass
+        self.twitter_client = TwitterClient()
 
-    def clean(self, tweet_to_clean):
-        tweet_to_clean = re.sub(r'^RT[\s]+', '', tweet_to_clean)
-        tweet_to_clean = re.sub(r'https?://.*[\r\n]*', '', tweet_to_clean)
-        tweet_to_clean = re.sub(r'#', '', tweet_to_clean)
-        tweet_to_clean = re.sub(r'@[A-Za-z0–9]+', '', tweet_to_clean)
-        return tweet_to_clean
+        # Get the API
+        self.twitter_api = self.twitter_client.get_twitter_client_api()
+        self.tweet_fetcher = TweetDataFetcher(api=self.twitter_api)
 
+    def fetch_tweet_by_query(self, query=None, count=5):
+        fetched_tweets = self.tweet_fetcher.fetch_tweet_by_query(query=query, count=count)
 
-if __name__ == "__main__":
-    # Get all the necessary class
-    twitter_client = TwitterClient()
-    tweet_analyzer = TweetAnalyzer()
-    tweet_preprocessing = TweetPreprocessing()
+        tweets_list = []
 
-    # Get the API
-    twitter_api = twitter_client.get_twitter_client_api()
-    tweet_fetcher = TweetDataFetcher(api=twitter_api)
+        for tweet in fetched_tweets:
+            print(tweet.created_at)
+            # print(DateTimeEncoder.decode(tweet.created_at))
+            temp = {
+                "text": p.clean(tweet.text),
+                "screen_name": tweet.user.screen_name,
+                "created_at": str(tweet.created_at)
+            }
+            tweets_list.append(temp)
 
-    # Variable
-    screen_name = "iphone"
-    hash_tag_list = ["GalaxyA52", "SamsungGalaxy", "GalaxyA", "GalaxyA72", "GalaxyS21"]
-
-    query = "iphone"
-    tweets_per_query = 10
-    file_name = 'query.txt'
-    since_id = None
-
-    # Fetch all necessary data
-    tweets_by_user = tweet_fetcher.fetch_tweet_by_screen_name(screen_name=screen_name, count=10)
-    tweets_by_query = tweet_fetcher.fetch_tweet_by_query(query=query, count=tweets_per_query)
-
-    # Convert tweets to data frame
-    # df = tweet_analyzer.tweets_to_data_frame(tweets_by_user)
-    df = tweet_analyzer.tweets_to_data_frame(tweets_by_query)
-
-    cleaned_tweets = []
-
-    for tweet in df['text']:
-        cleaned_tweets.append(tweet_preprocessing.clean(tweet))
-        # print("Before: \t", tweet)
-        print("After: \t", tweet_preprocessing.clean(tweet), end="\n\n")
-
-    for tweet in cleaned_tweets:
-        print(tweet)
-
-    # print(df)
-    # print(len(df))
-    # print(df['text'])
-    # print(df['screen_name'])
-    # print(df['favorite'])
-    # print(df['retweet'])
-
-    #
-    # twitter_streamer = TwitterStreamer()
-    # twitter_streamer.stream_tweets(fetched_tweets_filename, hash_tag_list)
-
-    # twitter_client = TwitterClient('verified')
-    # # print(twitter_client.get_user_timeline_tweets(1))
-    # print(twitter_client.get_friend_list(3))
+        print(tweets_list)
+        return tweets_list

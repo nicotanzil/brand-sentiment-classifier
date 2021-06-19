@@ -1,0 +1,90 @@
+@import "../../styles/colors.scss";
+@import "../../styles/mixins.scss";
+@import "../../styles/box-shadow.scss";
+
+.twitter-card-container {
+  background: $bg-white;
+  padding: 30px 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 400px;
+  margin: 10px;
+  box-shadow: $box-shadow-side-bottom-depth;
+  .card-header-container {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    .profile-picture {
+      border-radius: 50%;
+      height: 50px;
+      width: 50px;
+    }
+    .card-detail-container {
+      display: flex;
+      flex-direction: column;
+      margin: 5px 10px;
+      .name {
+        font-weight: bold;
+        font-size: 16px;
+        margin: 5px 0;
+      }
+      .screen-name {
+        font-size: 14px;
+        color: $font-gray;
+      }
+      .posted-at {
+        color: $font-gray;
+        font-size: 12px;
+        font-style: italic;
+      }
+    }
+    .twitter-logo {
+      border-radius: 50%;
+      width: 30px;
+    }
+    .sentiment {
+      padding: 5px 10px;
+      margin: 5px 10px;
+      border-radius: 5px;
+      text-transform: uppercase;
+    }
+    #positive {
+      background: green;
+      color: white;
+    }
+    #negative {
+      background: red;
+      color: white;
+    }
+  }
+  .content-container {
+    margin-top: 10px;
+  }
+  .hashtags-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 15px 0;
+    .hashtag {
+      border-radius: 15px;
+      background: $bg-lightgray;
+      color: $twitter-blue;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 10px 15px;
+      margin-right: 10px;
+      margin-top: 5px;
+    }
+  }
+  .media-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    .media {
+      .tweet-asset {
+        width: 100%;
+        border-radius: 5px;
+      }
+    }
+  }
+}

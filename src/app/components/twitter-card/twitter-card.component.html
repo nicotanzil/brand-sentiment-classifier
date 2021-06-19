@@ -1,0 +1,24 @@
+<div class="twitter-card-container">
+  <div class="card-header-container">
+    <img src="{{tweet?.user?.profile_image_url}}" alt="{{tweet?.user?.screen_name}}'s profile picture" class="profile-picture">
+    <div class="card-detail-container">
+      <span class="name">{{tweet?.user?.name}}</span>
+      <span class="screen-name">@{{tweet?.user?.screen_name}}</span>
+      <span class="posted-at">Posted at {{tweet?.created_at}}</span>
+    </div>
+    <img src="../../../assets/app/twitter_logo.png" alt="" class="twitter-logo">
+    <div class="sentiment" id="positive" *ngIf="sentiment == 'Positive'">{{tweet?.sentiment}}</div>
+    <div class="sentiment" id="negative" *ngIf="sentiment == 'Negative'">{{tweet?.sentiment}}</div>
+  </div>
+  <div class="content-container">
+    {{tweet?.text}}
+  </div>
+  <div class="hashtags-container">
+    <div class="hashtag" *ngFor="let hashtag of tweet?.entities?.hashtags">#{{hashtag.text}}</div>
+  </div>
+  <div class="media-container">
+    <div class="media" *ngFor="let media of tweet?.entities?.media">
+      <img class="tweet-asset" src="{{media.media_url_https}}" alt="Media URLs" *ngIf="media.type == 'photo' || media.type == 'animated_gif'">
+    </div>
+  </div>
+</div>

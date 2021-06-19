@@ -1,0 +1,15 @@
+<app-header></app-header>
+<div class="home-container">
+  <div class="home-search-container">
+    <div class="welcome-title">
+      Welcome to brand sentiment analyser.
+    </div>
+    <div class="welcome-detail">
+      Name something you wanna see on Twitter in the box below!
+    </div>
+    <form class="container">
+      <input type="text" name="search" id="search-bar" placeholder="Search Keyword" [(ngModel)]="query" autocomplete="off">
+      <button type="submit" class="search-button" (click)="submitQuery()"><fa-icon [icon]="faSearch"></fa-icon></button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+@import '../../styles/colors.scss';
+@import '../../styles/mixins.scss';
+@import '../../styles/box-shadow.scss';
+
+.dashboard-container {
+  padding: 10px 15px;
+  .content-header-container {
+    padding: 10px;
+    .keyword {
+      color: $twitter-blue;
+    }
+    .keyword-container {
+      font-size: 24px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .detail-container {
+      .overall-results {
+        font-weight: bold;
+      }
+    }
+  }
+  .content-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    .twitter-card-container {
+
+    }
+  }
+}

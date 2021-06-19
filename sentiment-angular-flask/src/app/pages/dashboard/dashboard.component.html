@@ -1,0 +1,18 @@
+<app-header></app-header>
+<div class="dashboard-container">
+  <div class="content-header-container">
+    <div class="keyword-container">
+      You are searching for <span class="keyword">{{keyword}}</span> on Twitter
+    </div>
+    <div class="detail-container">
+      <div class="overall-results">
+        Query showed {{tweets.length}} latest tweets about <span class="keyword">{{keyword}}</span> with {{pos_count}} positive tweets and {{neg_count}} negative tweets!
+      </div>
+    </div>
+  </div>
+  <div class="content-container">
+    <div class="twitter-card-container" *ngFor="let tweet of tweets">
+      <app-twitter-card [tweet]="tweet"></app-twitter-card>
+    </div>
+  </div>
+</div>

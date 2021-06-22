@@ -1,0 +1,43 @@
+<app-header></app-header>
+<div class="loading-modal" *ngIf="isLoading">
+  <img src="../../../assets/app/loading2.gif" alt="Loading bar">
+</div>
+<div class="dashboard-container">
+  <div class="content-header-container">
+    <div class="keyword-container">
+      You are searching for <span class="keyword">@{{keyword}}</span> on Twitter
+    </div>
+    <div class="detail-container">
+      <div class="overall-results">
+        Query showed {{tweets.length}} recently posted tweets by <span class="keyword">@{{keyword}}</span> with {{pos_count}} positive tweets and {{neg_count}} negative tweets!
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="profile-container">
+    <div class="profile-picture">
+      <img src="{{first_tweet.user.profile_image_url}}" alt="Profile Picture">
+    </div>
+    <div class="identity-container">
+      <div class="name-container">{{first_tweet.user.name}}</div>
+      <div class="username-container">@{{first_tweet.user.screen_name}}</div>
+      <div class="created-container">Joined Twitter since {{first_tweet.user.created_at}}</div>
+    </div>
+  </div>
+  <hr>
+  <div class="hashtag-list-container">
+    <div class="hashtag-title">Popular hashtags on <span class="keyword">@{{keyword}}</span></div>
+    <div class="hashtag-container">
+      <div class="hashtag" *ngFor="let hash of hashtags" (click)="redirectHashtag(hash)">{{hash}}</div>
+    </div>
+  </div>
+  <hr>
+  <div class="content-container" id="popular-tweets">
+    <div class="content-title">Recently posted Tweets by <span class="keyword">@{{keyword}}</span></div>
+    <div class="tweets-container">
+      <div class="twitter-card-container" *ngFor="let tweet of tweets">
+        <app-twitter-card [tweet]="tweet"></app-twitter-card>
+      </div>
+    </div>
+  </div>
+</div>

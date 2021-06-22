@@ -9,7 +9,8 @@
   width: 400px;
   max-width: 400px;
   margin: 10px;
-  box-shadow: $box-shadow-side-bottom-depth;
+  box-shadow: $box-shadow-side-bottom-depth-2;
+  cursor: pointer;
   .card-header-container {
     display: flex;
     align-items: center;
@@ -74,6 +75,7 @@
       padding: 10px 15px;
       margin-right: 10px;
       margin-top: 5px;
+      box-shadow: $box-shadow-side-bottom-depth-2;
     }
   }
   .media-container {
@@ -87,4 +89,28 @@
       }
     }
   }
+
+  .social-detail-container {
+    display: flex;
+    flex-direction: row;
+    .count {
+      font-weight: bold;
+      font-size: 14px;
+      margin-left: 5px;
+    }
+    .retweet-container, .favorite-container {
+      display: flex;
+      flex-direction: row;
+      margin-right: 15px;
+      align-items: center;
+      justify-content: center;
+      #retweet-logo, #favorite-logo {
+        width: 25px;
+        height: 25px;
+      }
+    }
+  }
+}
+.twitter-card-container:hover {
+  box-shadow: $box-shadow-side-bottom-depth;
 }

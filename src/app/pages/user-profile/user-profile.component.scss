@@ -30,25 +30,44 @@
         font-weight: bold;
       }
     }
-    .graph-container {
-      margin: 10px 20px;
-      padding: 10px;
-      max-width: 80%;
-      box-shadow: $box-shadow-side-bottom-depth;
-      background: $bg-white;
-      border-radius: 10px;
-      .graph-title {
-        font-size: 24px;
-        font-weight: bold;
-        text-transform: uppercase;
+  }
+
+  .profile-container {
+    background: $twitter-blue;
+    width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: $box-shadow-bottom-depth;
+    .profile-picture {
+      img {
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        border: 1px solid white;
       }
-      .graph-inner-container {
-        .graph {
-          margin: auto;
-        }
+    }
+    .identity-container {
+      display: flex;
+      flex-direction: column;
+      margin-left: 30px;
+      color: white;
+      .name-container {
+        font-size: 32px;
+        font-weight: bold;
+      }
+      .screen-name {
+        font-size: 24px;
+      }
+      .created-container {
+        font-size: 12px;
+        color: $font-light-gray;
       }
     }
   }
+
   .hashtag-list-container {
     display: flex;
     flex-wrap: wrap;

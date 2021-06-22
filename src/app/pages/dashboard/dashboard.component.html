@@ -1,4 +1,7 @@
 <app-header></app-header>
+<div class="loading-modal" *ngIf="isLoading">
+  <img src="../../../assets/app/loading2.gif" alt="Loading bar">
+</div>
 <div class="dashboard-container">
   <div class="content-header-container">
     <div class="keyword-container">
@@ -6,13 +9,44 @@
     </div>
     <div class="detail-container">
       <div class="overall-results">
-        Query showed {{tweets.length}} latest tweets about <span class="keyword">{{keyword}}</span> with {{pos_count}} positive tweets and {{neg_count}} negative tweets!
+        Query showed {{tweets.length}} popular tweets about <span class="keyword">{{keyword}}</span> with {{pos_count}} positive tweets and {{neg_count}} negative tweets!
+      </div>
+      <div class="overall-results">
+        Query showed {{recent_tweets.length}} latest tweets about <span class="keyword">{{keyword}}</span> with {{pos_count_recent}} positive tweets and {{neg_count_recent}} negative tweets!
+      </div>
+    </div>
+    <div class="graph-container">
+      <div class="graph-title">
+        This graph shows general Twitter sentiment on <span class="keyword">{{keyword}}</span> in the last 7 days
+      </div>
+      <div class="graph-inner-container">
+        <app-tweet-graph [graphDatas]="tweet_graphs" class="graph"></app-tweet-graph>
       </div>
     </div>
   </div>
+  <hr>
+  <div class="hashtag-list-container">
+    <div class="hashtag-title">Popular hashtags on <span class="keyword">{{keyword}}</span></div>
+    <div class="hashtag-container">
+      <div class="hashtag" *ngFor="let hash of hashtags" (click)="redirectHashtag(hash)">{{hash}}</div>
+    </div>
+  </div>
+  <hr>
+  <div class="content-container" id="popular-tweets">
+    <div class="content-title">Popular Tweets about <span class="keyword">{{keyword}}</span></div>
+    <div class="tweets-container">
+      <div class="twitter-card-container" *ngFor="let tweet of tweets">
+        <app-twitter-card [tweet]="tweet"></app-twitter-card>
+      </div>
+    </div>
+  </div>
+  <hr>
   <div class="content-container">
-    <div class="twitter-card-container" *ngFor="let tweet of tweets">
-      <app-twitter-card [tweet]="tweet"></app-twitter-card>
+    <div class="content-title">Recently posted Tweets about <span class="keyword">{{keyword}}</span></div>
+    <div class="tweets-container">
+      <div class="twitter-card-container" *ngFor="let tweet of recent_tweets">
+        <app-twitter-card [tweet]="tweet"></app-twitter-card>
+      </div>
     </div>
   </div>
 </div>

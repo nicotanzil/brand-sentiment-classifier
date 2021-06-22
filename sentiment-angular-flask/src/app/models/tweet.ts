@@ -8,4 +8,7 @@ export class Tweet {
   entities: Entity = new Entity();
   sentiment: string | undefined;
   created_at: Date | undefined;
+  retweet_count!: number;
+  reply_count!: number;
+  favorite_count!: number;
 }

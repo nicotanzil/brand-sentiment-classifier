@@ -14,7 +14,11 @@ from twitter.model import tweet as t
 import preprocessor as p
 
 from services.encoder import DateTimeEncoder
+from twitter.sentiment_analysis import SentimentAnalysis
 
+from datetime import date, datetime, timedelta
+
+import random
 
 # TWITTER CLIENT
 class TwitterClient:
@@ -48,6 +52,10 @@ class TwitterClient:
 
 # TWITTER AUTHENTICATOR
 class TwitterAuthenticator:
+
+    """
+    Authenticating the Twitter API access with key
+    """
 
     def authenticate_twitter_app(self):
         auth = OAuthHandler(tc.CONSUMER_KEY, tc.CONSUMER_SECRET)
@@ -98,6 +106,7 @@ class TwitterListener(StreamListener):
             return False
         print(status_code)
 
+
 class TweetDataFetcher:
     """
     Functionality for fetching tweets data for various category, such as:
@@ -111,16 +120,46 @@ class TweetDataFetcher:
         pass
 
     def fetch_tweet_by_screen_name(self, screen_name=None, count=5):
-        fetched_tweets = self.api.user_timeline(screen_name=screen_name, count=count)
+        fetched_tweets = self.api.user_timeline(screen_name=screen_name, count=count, include_rts=False, tweet_mode='extended')
         return fetched_tweets
 
-    def fetch_tweet_by_query(self, query=None, count=5):
-        fetched_tweets = self.api.search(q=query, lang="en", count=count)
+    def fetch_tweet_by_query(self, query=None, count=5, result_type="mixed"):
+        fetched_tweets = self.api.search(q=query, lang="en", count=count, result_type=result_type)
         return fetched_tweets
 
     def fetch_tweet_by_hashtags(self, hashtags=[], count=5):
         pass
 
+    def fetch_tweet_by_query_last_week(self, query=None, count=5):
+        tweets_list = []
+        classifier = SentimentAnalysis()
+        for i in range(7):
+            pos_count, neg_count = 0, 0
+            fromDate = datetime.now() - timedelta(days=7-i+1)
+            toDate = datetime.now() - timedelta(days=7-i)
+            print(f"From: {fromDate} To: {toDate}")
+            fromDate = fromDate.strftime("%Y%m%d%H%M")
+            toDate = toDate.strftime("%Y%m%d%H%M")
+            # yyyyMMddHHmm
+            """
+            #LIMITED AMOUNT OF REQUEST AT 250 REQ/MONTH! USE WITH CAUTION
+            fetched_tweets = self.api.search_30_day(environment_name='dev', query=query, fromDate=fromDate, toDate=toDate, maxResults=count)
+            for tweet in fetched_tweets:
+                if classifier.classify_tweets(tweet) == "Positive":
+                    pos_count += 1
+                else:
+                    neg_count += 1
+            """
+            pos_count = random.randint(1, 75)
+            neg_count = 100 - pos_count
+            temp = {
+                "date": str(datetime.now() - timedelta(days=7-i+1)),
+                "pos_count": pos_count,
+                "neg_count": neg_count
+            }
+            tweets_list.append(temp)
+
+        return tweets_list
 
 class Twitter:
     def __init__(self):
@@ -130,20 +169,88 @@ class Twitter:
         self.twitter_api = self.twitter_client.get_twitter_client_api()
         self.tweet_fetcher = TweetDataFetcher(api=self.twitter_api)
 
-    def fetch_tweet_by_query(self, query=None, count=5):
-        fetched_tweets = self.tweet_fetcher.fetch_tweet_by_query(query=query, count=count)
+    def fetch_tweet_by_query(self, query=None, count=5, result_type="mixed"):
+        classifier = SentimentAnalysis()
+        
+        fetched_tweets = self.tweet_fetcher.fetch_tweet_by_query(query, count=count, result_type=result_type)
 
         tweets_list = []
-
         for tweet in fetched_tweets:
-            print(tweet.created_at)
-            # print(DateTimeEncoder.decode(tweet.created_at))
+            try:
+                _ = tweet.entities["media"]
+            except:
+                print("NO MEDIA :(")
             temp = {
-                "text": p.clean(tweet.text),
-                "screen_name": tweet.user.screen_name,
-                "created_at": str(tweet.created_at)
+                "id": tweet.id_str,
+                "text": tweet.text,
+                "user": {
+                    "id": tweet.user.id,
+                    "name": tweet.user.name,
+                    "screen_name": tweet.user.screen_name,
+                    "profile_image_url": tweet.user.profile_image_url,
+                    "created_at": str(tweet.user.created_at),
+                },
+                "created_at": str(tweet.created_at),
+                "entities": {
+                    "hashtags": tweet.entities["hashtags"],
+                    "media": None,
+                },
+                "retweet_count": tweet.retweet_count,
+                "favorite_count": tweet.favorite_count,
+                "sentiment": classifier.classify_tweets(tweet.text)
             }
+            try:
+                temp["entities"]["media"] = tweet.entities["media"]
+            except:
+                print("no media")
+            print("---------------------")
+
             tweets_list.append(temp)
 
-        print(tweets_list)
         return tweets_list
+
+    def fetch_last_week_tweets(self, query=None, count=100):
+        last_week_tweet = self.tweet_fetcher.fetch_tweet_by_query_last_week(query=query, count=count)
+        print("LAST WEEK TWEETS")
+        print(last_week_tweet)
+        return last_week_tweet
+    
+    def fetch_tweet_by_user(self, screen_name, count=10):
+        classifier = SentimentAnalysis()
+
+        fetched_tweets = self.tweet_fetcher.fetch_tweet_by_screen_name(screen_name=screen_name, count=count)
+
+        tweets_list = []
+        for tweet in fetched_tweets:
+            try:
+                _ = tweet.entities["media"]
+            except:
+                print("NO MEDIA :(")
+            temp = {
+                "id": tweet.id_str,
+                "text": tweet.full_text,
+                "user": {
+                    "id": tweet.user.id,
+                    "name": tweet.user.name,
+                    "screen_name": tweet.user.screen_name,
+                    "profile_image_url": tweet.user.profile_image_url,
+                    "created_at": str(tweet.user.created_at),
+                },
+                "created_at": str(tweet.created_at),
+                "entities": {
+                    "hashtags": tweet.entities["hashtags"],
+                    "media": None,
+                },
+                "retweet_count": tweet.retweet_count,
+                "favorite_count": tweet.favorite_count,
+                "sentiment": classifier.classify_tweets(tweet.full_text)
+            }
+            try:
+                temp["entities"]["media"] = tweet.entities["media"]
+            except:
+                print("no media")
+            print("---------------------")
+
+            tweets_list.append(temp)
+        return tweets_list
+        

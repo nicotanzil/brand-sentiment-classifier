@@ -27,7 +27,7 @@
       height: 50%;
       @include flex-center;
       flex-direction: row;
-      #search-bar {
+      .search-bar {
         font-size: 24px;
         background: white;
         color: $twitter-blue;
@@ -51,6 +51,18 @@
       .search-button:hover {
         background: $twitter-blue;
         color: whitesmoke;
+      }
+    }
+
+    #home-tabs {
+      margin-top: 30px;
+      li {
+        a {
+          color: white;
+        }
+        .active {
+          color: $twitter-blue;
+        }
       }
     }
   }

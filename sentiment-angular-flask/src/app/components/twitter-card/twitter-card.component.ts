@@ -19,4 +19,9 @@ export class TwitterCardComponent implements OnInit {
       this.sentiment = this.tweet.sentiment
     }
   }
+
+  goToTweet() {
+    console.log(`https://twitter.com/username/status/${this.tweet?.id}`)
+    window.open(`https://twitter.com/username/status/${this.tweet?.id}`, "_blank");
+  }
 }

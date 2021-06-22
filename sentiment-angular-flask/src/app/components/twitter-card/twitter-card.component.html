@@ -1,4 +1,4 @@
-<div class="twitter-card-container">
+<div class="twitter-card-container" (click)="goToTweet()">
   <div class="card-header-container">
     <img src="{{tweet?.user?.profile_image_url}}" alt="{{tweet?.user?.screen_name}}'s profile picture" class="profile-picture">
     <div class="card-detail-container">
@@ -19,6 +19,16 @@
   <div class="media-container">
     <div class="media" *ngFor="let media of tweet?.entities?.media">
       <img class="tweet-asset" src="{{media.media_url_https}}" alt="Media URLs" *ngIf="media.type == 'photo' || media.type == 'animated_gif'">
+    </div>
+  </div>
+  <div class="social-detail-container">
+    <div class="retweet-container">
+      <img src="../../../assets/app/retweet.png" alt="Retweet Logo" id="retweet-logo">
+      <div class="count">{{tweet?.retweet_count}}</div>
+    </div>
+    <div class="favorite-container">
+      <img src="../../../assets/app/favorite.png" alt="Retweet Logo" id="favorite-logo">
+      <div class="count">{{tweet?.favorite_count}}</div>
     </div>
   </div>
 </div>

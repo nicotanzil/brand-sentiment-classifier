@@ -2,13 +2,24 @@
 @import '../../styles/mixins.scss';
 @import '../../styles/box-shadow.scss';
 
+.loading-modal {
+  background: rgba(0, 0, 0, 0.8);
+  width: 100vw;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .dashboard-container {
+  .keyword {
+    color: $twitter-blue;
+  }
   padding: 10px 15px;
   .content-header-container {
     padding: 10px;
-    .keyword {
-      color: $twitter-blue;
-    }
     .keyword-container {
       font-size: 24px;
       text-transform: uppercase;
@@ -19,13 +30,69 @@
         font-weight: bold;
       }
     }
+    .graph-container {
+      margin: 10px 20px;
+      padding: 10px;
+      max-width: 80%;
+      box-shadow: $box-shadow-side-bottom-depth;
+      background: $bg-white;
+      border-radius: 10px;
+      .graph-title {
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .graph-inner-container {
+        .graph {
+          margin: auto;
+        }
+      }
+    }
+  }
+  .hashtag-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    margin: 15px 10px;
+    .hashtag-title {
+      font-size: 18px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .hashtag-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      .hashtag {
+        border-radius: 15px;
+        background: $bg-lightgray;
+        color: $twitter-blue;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 10px 15px;
+        margin-right: 15px;
+        margin-top: 10px;
+        box-shadow: $box-shadow-side-bottom-depth-2;
+        cursor: pointer;
+      }
+      .hashtag:hover {
+        box-shadow: $box-shadow-side-bottom-depth;
+      }
+    }
   }
   .content-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    .twitter-card-container {
-
+    flex-direction: column;
+    margin: 30px 10px;
+    .content-title {
+      font-size: 18px;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .tweets-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
     }
   }
 }

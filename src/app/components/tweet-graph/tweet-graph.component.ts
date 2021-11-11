@@ -39,7 +39,7 @@ export class TweetGraphComponent implements OnInit, OnChanges {
       console.log(data)
       this.pos_count.push(data.pos_count)
       this.neg_count.push(data.neg_count)
-      this.dates.push(data.date.substring(0, 9))
+      this.dates.push(data.date.substring(0, 10))
     });
   }
 

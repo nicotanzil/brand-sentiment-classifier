@@ -22,12 +22,12 @@ export class HomeComponent implements OnInit {
 
   submitQuery(): void {
     console.log(this.query);
-    this.router.navigate(['dashboard/' + this.query]).then(r => console.log(r));
+    // this.router.navigate(['dashboard/' + this.query]).then(r => console.log(r));
   }
 
   submitUserQuery(): void {
     console.log(this.query)
-    this.router.navigate(['user/' + this.query])
+    // this.router.navigate(['user/' + this.query])
   }
 
   loadFontAwesome(): void {

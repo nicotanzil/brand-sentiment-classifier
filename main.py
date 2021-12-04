@@ -48,6 +48,14 @@ class Keyword(Resource):
 
 api.add_resource(Keyword, "/keyword/<string:keyword>")
 
+# class KeywordStreamingBigData(Resource):
+#     def get(self, keyword):
+#         tweets = twitter.fetch_tweet_by_query(query=keyword, count=100, result_type="popular")
+#         tweet_texts = [tweet['text'] for tweet in tweets]
+#         return tweet_texts
+
+# api.add_resource(KeywordStreamingBigData, "/keyword/streaming/<string:keyword>")
+
 class UserQuery(Resource):
     def get(self, screen_name):
         tweets = twitter.fetch_tweet_by_user(screen_name=screen_name, count=15)
